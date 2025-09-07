@@ -1,2 +1,3 @@
 requests
 python-dotenv
+espn-api==0.29.0
