@@ -1,40 +1,49 @@
-from espn_api.football import League
 import os
+from espn_api.football import League
+from datetime import datetime
 import time
 
-print("\n🚀 Fantasy Whisperer is live on Render 🎉")
+def main():
+    # Load from environment variables
+    email = os.getenv('EMAIL')
+    team_id = os.getenv('TEAM_ID')
+    league_id = os.getenv('LEAGUE_ID')
+    year = 2025
+    swid = os.getenv('SWID')
+    espn_s2 = os.getenv('ESPN_S2')
 
-# Read environment variables
-email = os.getenv("EMAIL")
-team_id = int(os.getenv("TEAM_ID"))
-league_id = int(os.getenv("LEAGUE_ID"))
-espn_s2 = os.getenv("ESPN_S2")
-swid = os.getenv("SWID")
+    print("🏈 Fantasy Whisperer is Live on Render 🟢")
+    print(f"📧 Email: {email}")
+    print(f"📘 League ID: {league_id}")
+    print(f"🏈 Team ID: {team_id}")
 
-# Confirm environment variables
-print(f"📧 Email: {email}")
-print(f"🆔 Team ID: {team_id}")
-print(f"🏆 League ID: {league_id}")
-print(f"🍪 ESPN_S2: {'✅ Loaded' if espn_s2 else '❌ MISSING'}")
-print(f"🍪 SWID: {'✅ Loaded' if swid else '❌ MISSING'}")
+    print("🧠 ESPN_S2 ✅ Loaded" if espn_s2 else "❌ ESPN_S2 MISSING")
+    print("🧠 SWID ✅ Loaded" if swid else "❌ SWID MISSING")
 
-# Connect to league
-print("🔌 Connecting to ESPN league...")
-league = League(league_id=league_id, year=2025, espn_s2=espn_s2, swid=swid)
-print("✅ Connected to league.")
+    # Debug logs
+    print(f"[DEBUG] Using League ID: {league_id}")
+    print(f"[DEBUG] Using Season: {year}")
+    print(f"[DEBUG] SWID: {swid}")
+    print(f"[DEBUG] ESPN_S2: {espn_s2[:15]}...(truncated)")
 
-# Get your team object
-my_team = next(team for team in league.teams if team.team_id == team_id)
+    # Connect to league (add debug=True for more info)
+    print("📡 Connecting to ESPN league...")
+    try:
+        league = League(league_id=league_id, year=year, espn_s2=espn_s2, swid=swid, debug=True)
+        print("✅ Connected to ESPN API")
 
-# Print your team info
-print(f"\n🧠 Team Name: {my_team.team_name}")
-print(f"👑 Owner: {my_team.owner}")
-print(f"💥 Record: {my_team.wins}-{my_team.losses}, Streak: {my_team.streak}")
-print("📋 Roster:")
-for player in my_team.roster:
-    print(f" - {player.name} ({player.position})")
+        # Sample usage — get team names
+        for team in league.teams:
+            print(f"🏆 Team: {team.team_name} | Owner: {team.owner}")
 
-# Bot running loop
-while True:
-    print(f"\n🧠 [{time.strftime('%Y-%m-%d %H:%M:%S')}] Fantasy Whisperer is running...")
-    time.sleep(60)
+        print("🎉 Fantasy Whisperer is running...")
+
+    except Exception as e:
+        print("❌ ERROR connecting to ESPN League API")
+        print(str(e))
+
+if __name__ == "__main__":
+    while True:
+        main()
+        print(f"🔁 Sleeping 24h... [{datetime.now()}]")
+        time.sleep(86400)  # Run once per day
