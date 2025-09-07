@@ -1,26 +1,40 @@
+from espn_api.football import League
 import os
 import time
-from datetime import datetime
-import sys
 
-print("\n✅ Fantasy Whisperer is live on Render 🎉", flush=True)
+print("\n🚀 Fantasy Whisperer is live on Render 🎉")
 
 # Read environment variables
 email = os.getenv("EMAIL")
-team_id = os.getenv("TEAM_ID")
-league_id = os.getenv("LEAGUE_ID")
+team_id = int(os.getenv("TEAM_ID"))
+league_id = int(os.getenv("LEAGUE_ID"))
 espn_s2 = os.getenv("ESPN_S2")
 swid = os.getenv("SWID")
 
-# Display loaded environment variables
-print(f"📧 Email: {email}", flush=True)
-print(f"🏈 Team ID: {team_id}", flush=True)
-print(f"🏆 League ID: {league_id}", flush=True)
-print(f"🍪 ESPN_S2: {'✅ Loaded' if espn_s2 else '❌ MISSING'}", flush=True)
-print(f"🍪 SWID: {'✅ Loaded' if swid else '❌ MISSING'}", flush=True)
+# Confirm environment variables
+print(f"📧 Email: {email}")
+print(f"🆔 Team ID: {team_id}")
+print(f"🏆 League ID: {league_id}")
+print(f"🍪 ESPN_S2: {'✅ Loaded' if espn_s2 else '❌ MISSING'}")
+print(f"🍪 SWID: {'✅ Loaded' if swid else '❌ MISSING'}")
 
-# Heartbeat loop
+# Connect to league
+print("🔌 Connecting to ESPN league...")
+league = League(league_id=league_id, year=2025, espn_s2=espn_s2, swid=swid)
+print("✅ Connected to league.")
+
+# Get your team object
+my_team = next(team for team in league.teams if team.team_id == team_id)
+
+# Print your team info
+print(f"\n🧠 Team Name: {my_team.team_name}")
+print(f"👑 Owner: {my_team.owner}")
+print(f"💥 Record: {my_team.wins}-{my_team.losses}, Streak: {my_team.streak}")
+print("📋 Roster:")
+for player in my_team.roster:
+    print(f" - {player.name} ({player.position})")
+
+# Bot running loop
 while True:
-    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print(f"💓 [{now}] Fantasy Whisperer is running...", flush=True)
-    time.sleep(5)
+    print(f"\n🧠 [{time.strftime('%Y-%m-%d %H:%M:%S')}] Fantasy Whisperer is running...")
+    time.sleep(60)
