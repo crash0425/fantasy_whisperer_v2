@@ -1,24 +1,34 @@
 import os
+from espn_api.football import League
 from datetime import datetime
 import time
 
-print("🔥🔥🔥 STARTING Fantasy Whisperer TEST 🔥🔥🔥")
+print("🔥 Fantasy Whisperer is running...")
 
-# Read env variables
-email = os.getenv("EMAIL", "Not Set")
-team_id = os.getenv("TEAM_ID", "Not Set")
-league_id = os.getenv("LEAGUE_ID", "Not Set")
-espn_s2 = os.getenv("ESPN_S2", "Not Set")
-swid = os.getenv("SWID", "Not Set")
+# Load environment variables
+email = os.getenv("EMAIL")
+team_id = int(os.getenv("TEAM_ID"))
+league_id = int(os.getenv("LEAGUE_ID"))
+year = 2025
+espn_s2 = os.getenv("ESPN_S2")
+swid = os.getenv("SWID")
 
-print("📦 ENV VARIABLES LOADED:")
-print(f"📧 EMAIL: {email}")
-print(f"🏈 TEAM_ID: {team_id}")
-print(f"📘 LEAGUE_ID: {league_id}")
-print(f"🍪 ESPN_S2: {'Loaded' if espn_s2 != 'Not Set' else 'Missing'}")
-print(f"🍪 SWID: {'Loaded' if swid != 'Not Set' else 'Missing'}")
+print("📧 Email:", email)
+print("🏈 Team ID:", team_id)
+print("📘 League ID:", league_id)
+print("🍪 ESPN_S2:", "Loaded" if espn_s2 else "Missing")
+print("🍪 SWID:", "Loaded" if swid else "Missing")
 
-print("\n⏳ Pausing for 5 seconds...")
-time.sleep(5)
+try:
+    print("🔌 Connecting to ESPN league...")
+    league = League(league_id=league_id, year=year, espn_s2=espn_s2, swid=swid)
+    print("✅ League connected.")
+    print(f"💥 Team Name: {league.teams[team_id - 1].team_name}")
+    print(f"🏆 League Name: {league.settings.name}")
+    print(f"📅 Week: {league.current_week}")
 
-print("✅ Diagnostic test completed. You ARE seeing this from main.py ✅")
+except Exception as e:
+    print("❌ ERROR connecting to ESPN league:")
+    print(e)
+
+print("✅ Fantasy Whisperer has finished setup.")
