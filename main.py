@@ -1,5 +1,5 @@
 import time
-from fantasy_whisperer_v2 import config
+import config
 
 def simulate_analysis():
     print(f"[INFO] Running fantasy football check for Team {config.TEAM_ID} in League {config.LEAGUE_ID}")
